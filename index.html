@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Webzijde RSDV</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="workrelated">
+	  <meta name="keywords" content="zzp, contract, telecom, infrastructuur">
+  	<meta name="author" content="RSDV">
+	
+    <title>Webzijde RSDV</title>
+    <link rel="stylesheet" href="css/style_index.css">
+	<link rel="shortcut icon" type="image/x-icon" href="pages/docs/images/favicon.ico" />
+	
+
+	
+	<div class="fixed-header">
+	
+			<div id="branding">
+				<h2><span class="highlight"> RSDV</span> Eenmanszaak</h2>
+			</div>
+				<div>			
+					<a href="index.html">Home</a>
+					<a href="pages/webmap001.html">Map1</a>
+					<a href="pages/webmap002.html">Map2</a>
+					<a href="pages/webpage003.html">N11</a>
+					<a href="pages/webpage004.html">Revisie</a>	
+				</div>		
+	   </div>
+	</head>
+	<body>
+
+
+   <div class="container"> 
+     <h3>Website.</h3>
+	<p>Aan de sabittical geslogen. Gedoken in Leaflet en Open Layers.</p>
+
+	<p>Wilde de QGIS plug-in QGIS2web helemaal uitpluizen, en zelf een alternatief fabriceren. Die zou ik dan vanuit QGIS kunnen publiceren, was het idee. Ben daar maar mee gestopt. Javascript moet je doorgronden en dat doe ik niet. Ineens ben ik bijna waar ik zijn wil met deze shit. Zie webmap Velsertunnel. Heb ook een voorbeeldmap van de Leaflet pagina nagemaakt. Kan je het bouwjaar van panden bekijken, in en om Benthuizen.</p>
+	<p>Sommige afdrukken van qgis2web hadden eigenaardigheden. Zoals geen labels in Laeflet, maar wel in Open Layers. En de plaatsing van de popups in het midden van de linestring, gaf totaal geen logisch overzicht van kabels en leidingen. De beperkte brievenbus-kijk op de webmap schiet dan van hot naar haar. Terwijl de doorlopende kabels bij dat project zo mooi aan elkaar geregen zijn.</p>
+	<p>Dat kan je mooi zien omdat je de verschillende lagen aan en uit kunt zetten. En het selecteren van het betreffende lijnstuk, dat nu ook per laag geregeld is. Zelfs de labels zien er nu acceptabel uit, hoewel ze nog over elkaar staan. Maar over het algemeen genomen ben ik zeer tevreden met het resultaat. </p>
+	<p>Ideaal voor het visualiseren van infra/telecom gedoe. Projectvoortgang en dergelijke.</p>
+	<p>Na een tijdje begon ik plugins te installeren in Laeflet. Veelal op GitHub, kan je allerlei aanvullingen op het geweldige idee van een webmap downloaden in een .zip bestand. Daarin zit dan vaak een  .js bestand en een .css bestand waar je in de bron van je pagina naar verwijzen gaat. En hopla weer een functie erbij geknutseld. Zo is de tweede webmap aangepast zodat je door de geschiedenis scrollen kan. Hoe leeg de omgeving eruit ziet, nog maar een paar decennia terug. De gemeente heeft de administratie niet helemaal op orde. Toen ik vroeger naar school wandelde kwam ik allerlei gebouwen tegen die niet op de plattegrond te vinden zijn. Ging na school spelen in en om de Kikkerbuurt, die staat er bijvoorbeeld helemaal niet op. De gesloopte adressen worden slechts vanaf 2000, of iets dergelijks, bijgehouden (niet zo vreemd natuurlijk, wie bij de gemeente gaat dat digitaliseren (betalen)). Verder nog een blikje wurmen opengetrokken, met het hele idee van vector tegels.</p><p>Probeer al een tijdje een standalone folder ergens neer te zetten (moet waarschijnlijk een database op de wolk worden) en van daaruit vectortegels te serveren naar een website, via Leaflet ofzo. Ben al een tijdje aan het kloten, er begint schot in te zitten sinds ik in ieder geval in QGIS snap hoe je de bestanden kunt stylen. Op mijn linux machine heb ik Tippecanoe klaar staan. Daar kan je geojson instoppen en er komen vectortegels uit. Het werkt allemaal, nu een test met verschillende lagen en of je die dan ook kan verven in QGIS. Bleek geen probleem.</p>
+	<p>Het hele eieren eten is, dat je blijft steken op de onnoemelijke hoeveelheid folders en bestanden. Sommige providers hebben daar een hekel aan. Vaak zijn grote bestanden niet toegestaan. Soms is het aantal een probleem. Paar keer geprobeerd. Twee keer de USB stick moeten formateren omdat tijdens het hakselen van vectortegels een en ander misging. Tippy gooit er òf een groot .mbtiles bestand uit, òf een gigantische berg mappen en bestanden, in aantal groeiend naar gelang het zoomniveau (dat loopt van 1 tot 22). Een bescheiden zoomlevel 15, van alle panden in Zuid-Holland komt op zoon 45.000 bestanden in 450 submappen (80.0 MB). Allemaal veuls te gek. Gewoon vergeten. Lokaal werkt het allemaal, blij mee.</p>
+	
+      </div> 
+	 
+    <div class="fixed-footer">
+	    <div>
+			<div class = "plaatje-footer">
+				<a href = "pages/webpage005.html"><img title="feesboek" src="image/face.png" onmouseover="this.src='image/face_on.png'" onmouseout="this.src='image/face.png'" /></a>		
+			</div>
+			<div class = "plaatje-footer">
+				<img title="plaatje" src="image/insta.png" onmouseover="this.src='image/insta_on.png'" onmouseout="this.src='image/insta.png'" />
+			</div>
+			<div class = "plaatje-footer">
+				<img title="linkin" src="image/link.png" onmouseover="this.src='image/link_on.png'" onmouseout="this.src='image/link.png'" />
+			</div>
+			<div class = "plaatje-footer">
+				<img title="tweet" src="image/twit.png" onmouseover="this.src='image/twit_on.png'" onmouseout="this.src='image/twit.png'" />
+			</div>
+        </div>
+	</div>
+	
+	</body>
+</html>

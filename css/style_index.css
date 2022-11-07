@@ -1,0 +1,124 @@
+/* Add some padding on document's body to prevent the content
+    to go underneath the header and footer */
+html {
+	font-family: "verdana";
+	}
+	
+body{  
+    background: #e8491d;      
+    padding-top: 63px;
+    padding-bottom: 38px;
+	margin: 0;
+	}
+	
+#map {
+	border-radius: 10px;
+	top: 0px;
+	height: 803px;
+	margin: 15px 25px;
+	}	
+
+.fixed-header{
+	z-index: 1001;
+    width: 100%;
+    position: fixed; 
+	padding: 0px;	
+	margin: 0px;	
+    background: #35424a;
+    color: white;
+	}
+	
+.fixed-header{
+    top: 0;
+	}
+	
+.fixed-header a:hover{
+	color:#e8491d;
+	}
+	
+.fixed-header a {
+	float: left;
+	color: white;
+	text-transform: uppercase;
+	text-decoration: none;
+	font-size: 15px;
+	width: 19%; /* Four equal-width links. If you have two links, use 50%, and 33.33% for three links, etc.. */
+	text-align: center; /* If you want the text to be centered */
+	}
+
+.highlight, .current {
+	color: #e8491d;
+	}
+	
+#branding{
+	text-align: center;
+	}
+
+#branding h2{
+	margin: 8px;
+	letter-spacing: 4px;
+	}
+
+.fixed-footer a:hover{
+	color:#e8491d;
+	}	
+	
+.container{
+	border-radius: 10px;
+	z-index: -1;
+	background: #35424a;
+	line-height: 22px;
+	padding: 15px;
+	margin: 15px 25px;
+	color: white;
+	}
+
+.fixed-footer{
+	z-index: 1001;
+	width: 100%;
+	position: fixed;
+	bottom: 0;
+    background: #35424a;    
+    overflow: auto;
+	}
+	
+.plaatje-footer {
+	text-align: center;
+
+	float: left;
+    height: 38px;
+	width: 23%;
+	}
+
+.plaatje-footer img{
+    height: 25px;
+	margin: 5px;
+	}
+	
+.audiobutton {
+	font: 18px/20px Verdana, Helvetica, sans-serif;
+	background-color: #35424a;
+	border: 0px solid white;
+	border-radius: 5px;
+	color: white;
+	padding: 5px 10px;
+	text-align: center;
+	text-decoration: none;
+	}
+	
+.audiobutton:hover {
+		font: 18px/20px Verdana, Helvetica, sans-serif;
+	font: 22/24px;
+	background-color:  #35424a;
+	border: 0px solid white;
+	border-radius: 5px;
+	color: #e8491d;
+	}
+	
+
+	
+
+	
+
+
+

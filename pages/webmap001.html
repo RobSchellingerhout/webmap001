@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../css/style_index.css">	
+	<title>DIY qgis2web.</title>
+	
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.1/dist/leaflet.css" integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.1/dist/leaflet.js" integrity="sha256-NDI0K41gVbWqfkkaHj15IzU7PtMoelkzyKp8TOaFQ3s=" crossorigin=""></script>
+
+<style>
+	
+.my-labels {
+	font: 800 18px Arial;
+	-webkit-text-fill-color: white;
+	-webkit-text-stroke: 1px;
+	}
+	
+.title { 
+	padding: 6px 8px; 
+	font: 18px/20px Arial, Helvetica, sans-serif; 
+	background: white; 
+	background: rgba(255,255,255,0.8); 
+	box-shadow: 0 0 15px rgba(0,0,0,1); 
+	border-radius: 5px; 
+	color: #777;
+	}
+	
+.info { 
+	padding: 6px 8px; 
+	font: 14px/16px Arial, Helvetica, sans-serif; 
+	background: white; 
+	background: rgba(255,255,255,0.8); 
+	box-shadow: 0 0 15px rgba(0,0,0,1); 
+	border-radius: 5px; 
+	} 
+
+.info h4 { 
+	margin: 0 0 0px; 
+	color: #777; 
+	}
+	
+.leaflet-tooltip {
+	opacity: 1;
+	position: absolute;
+	padding: 6px;
+	background-color: transparent;
+	border: transparent ;
+	border-radius: 3px;
+	color: #222;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	box-shadow: 0 0px 0px rgba(0,0,0,0.0);
+	}
+	
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+  visibility: hidden;
+	}
+
+</style>
+
+	<div class="fixed-header">
+			<div id="branding">
+				<h2><span class="highlight"> RSDV</span> Eenmanszaak</h2>
+			</div>				
+				<div>			
+					<a href="../index.html">Home</a>
+					<a href="webmap001.html">Map1</a>
+					<a href="webmap002.html">Map2</a>
+					<a href="webpage003.html">N11</a>
+					<a href="webpage004.html">Revisie</a>	
+				</div>	
+	</div>
+	
+	</head>
+	<body>
+
+<!-- make room for map -->
+
+<div id = "map"></div>
+
+<!-- laadt de bestanden in, de .js files van de .geojson. In die .js wordt de variable genoemd en geinitialiseerd -->
+<script type="text/javascript" src="../data/punten.js"></script>
+<script type="text/javascript" src="../data/subducts.js"></script>
+<script type="text/javascript" src="../data/lijnen.js"></script>
+<script type="text/javascript" src="../data/kabels.js"></script>
+<script type="text/javascript" src="../data/labels.js"></script>
+
+<script type="text/javascript">
+
+	var map = L.map('map').setView([52.48, 4.7],12);
+	
+	var nlmaps_luchtfoto = L.tileLayer('https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0/Actueel_ortho25/EPSG:3857/{z}/{x}/{y}.jpeg', {
+	minZoom: 6,
+	maxZoom: 19,
+	bounds: [[50.5, 3.25], [54, 7.6]],
+	attribution: 'Kaartgegevens &copy; <a href="https://www.kadaster.nl">Kadaster</a>'
+	});
+
+	var tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		maxZoom: 20,
+		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+	}).addTo(map);
+	
+    var carto = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
+         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+         subdomains: 'abcd',
+         maxZoom: 20
+    });
+	
+	var googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+	});
+	
+//List of basemaps
+	var baseMaps = {
+		'Luchtfoto alleen Nederland': nlmaps_luchtfoto,
+		"OpenStreetMap": tiles,
+		"CartoDB":carto,
+		"Google Maps": googleStreets
+		};
+		
+// Alle gebruikte variabelen.
+	var subducts;
+	var kabels;
+	var lijnen;
+	var punten;
+	var labels;	
+
+// Layer beschrijving vam elk op zich staand apart bestand (geojson). Deze gaat over de buizen.	
+	function highlightFeatureLijnen(e) {
+		var layer = e.target;
+
+		layer.setStyle({
+			weight: 10,
+			color: 'yellow',
+		});
+
+		if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+			layer.bringToFront();
+	}}
+
+	function onEachFeatureLijnen(feature, layer) {
+		layer.on({
+			mouseover: highlightFeatureLijnen,
+			mouseout: resetHighlightLijnen,
+		});
+	}
+	
+		function resetHighlightLijnen(e) {
+		lijnen.resetStyle(e.target);
+	}
+	
+	lijnen = L.geoJSON(lijnenJson, {
+    style: function(feature) {
+      switch (feature.properties.description) {
+		case 'NIEUWE HDPE40': return {color: "#27ae60", weight: 4};
+        case 'NIEUWE HDPE32': return {color: "#0000ff", weight: 4};
+        case 'NIEUWE LSZH': return {color: "#ff33cc", weight: 4};
+        case 'KW_PEBUIS': return {color: "#ffff00", lineCap: 'square', weight: 10};
+        case 'RVS': return {color: "#ff9966", lineCap: 'square', weight: 10};
+		case 'RVS_FLEX': return {color: "#ffaaaaff", lineCap: 'square', weight: 10};
+        case 'BORING': return {color: "#cb4335", lineCap: 'square', weight: 10};
+        case 'PREFAB': return {color: "#17202a", lineCap: 'square', weight: 10};
+		case 'PERSING': return {color: "#ff33cc", lineCap: 'square', weight: 10};
+      }
+    },
+	onEachFeature: onEachFeatureLijnen
+	}).bindPopup(function (layer) {
+	return "<CENTER><b>"+"WAT = "+layer.feature.properties.description+"<BR>"+
+			"<CENTER>"+"EVT. BUISCODE = "+layer.feature.properties.name+"<BR>"+
+			"<CENTER>"+"LENGTE = "+layer.feature.properties.length+".0 meter"}).addTo(map);
+			
+// Alle mogelijke shit voor de layer subducts.
+	function highlightFeatureSubducts(e) {
+		var layer = e.target;
+
+		layer.setStyle({
+			weight: 8,
+			color: 'red',
+		});
+
+		if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+			layer.bringToFront();
+	}}
+
+	function onEachFeatureSubducts(feature, layer) {
+		layer.on({
+			mouseover: highlightFeatureSubducts,
+			mouseout: resetHighlightSubducts,
+		});
+	}
+	
+		function resetHighlightSubducts(e) {
+		subducts.resetStyle(e.target);
+	}
+				
+			
+	subducts = L.geoJSON(json_subducts, {
+            style: function(feature) {
+              switch (feature.properties.description) {
+				case '4 x SUBDUCT': return {color: "#000000", weight: 3};
+                case '3 x SUBDUCT': return {color: "#808080ff", weight: 3};
+              }
+            },
+		  onEachFeature: onEachFeatureSubducts
+          }).bindPopup(function (layer) {
+			return "<CENTER><B>"+"AANTAL = "+layer.feature.properties.description+"<BR>"+
+					"<CENTER>"+"IN HDPE = "+layer.feature.properties.name});
+					
+// Alle mogelijke shit voor de layer kabels.
+	function highlightFeatureKabels(e) {
+		var layer = e.target;
+
+		layer.setStyle({
+			weight: 8,
+			color: '#0099ff',
+		});
+
+		if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+			layer.bringToFront();
+	}}
+
+	function onEachFeatureKabels(feature, layer) {
+		layer.on({
+			mouseover: highlightFeatureKabels,
+			mouseout: resetHighlightKabels,
+		});
+	}
+	
+	function resetHighlightKabels(e) {
+		kabels.resetStyle(e.target);
+	}
+	
+	kabels = L.geoJSON(kabelJson, {
+            style: function(feature) {
+              switch (feature.properties.description) {
+				case '4v GVK Breakoutkabel': return {color: "#cb4335", weight: 2};
+                case '96v GBT Minikabel': return {color: "#17202a", weight: 2};
+              }
+            },
+		  onEachFeature: onEachFeatureKabels
+          }).bindPopup(function (layer) {
+			return "<CENTER><B>"+"TYPE = "+layer.feature.properties.description+"<BR>"+
+					"<CENTER>"+"KABELCODE = "+layer.feature.properties.name+"<BR>"+
+					"<CENTER>"+"LENGTE = "+layer.feature.properties.length+".0 meter"});
+					
+// Alle mogelijke shit voor de layer punten.
+
+	function highlightFeaturePunts(e) {
+		var layer = e.target;
+
+		layer.setStyle({
+			weight: 8,
+			color: '#0099ff',
+		});
+
+		if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+			layer.bringToFront();
+	}}
+
+	function onEachFeaturePunts(feature, layer) {
+		layer.on({
+			mouseover: highlightFeatureKabels,
+			mouseout: resetHighlightKabels,
+		});
+	}
+	
+//Popup pointdata	
+	function createPopup(feature, layer) {
+		var popuppoint_text = 
+		"<CENTER><b>"+"WAT = "+layer.feature.properties.description+"<BR>"+"<CENTER>"+"EVT. OBJECTCODE = "+layer.feature.properties.name
+		layer.bindPopup(popuppoint_text)
+	}	
+ 
+//Geojson point color
+	function getColor(d) {
+		return d == 'GKP NIEUW' ? '#3253ffff' :
+			d == 'IWKS OMBOUWEN BESTAAND' ? '#ff33cc' :
+			d == 'DS BESTAAND' ? '#ff3832ff' :
+			d == 'GKP LEEG NIEUW' ? '#3fff32ff' :
+			d == 'BUISKOPPELING' ? '#ffffff' :
+		"#000000";//black
+		}
+			
+//Geojson pointdata					
+	punten = L.geoJson(json_punten, {
+			pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng, {			
+			radius: 8,
+			color: "#000000",
+			fillColor: getColor(feature.properties.description),
+			weight: 1,
+			fillOpacity: 1		
+			});
+		} ,
+		onEachFeature: createPopup
+	}).addTo(map);
+	
+   var title = new L.Control();
+	   title.onAdd = function (map) {
+		   this._div = L.DomUtil.create('div', 'title');
+		   this.update();
+		   return this._div;
+	   };
+	   title.update = function () {
+		   this._div.innerHTML = 'RWS Velsertunnel A22.';
+	   };
+	   title.addTo(map);
+	
+// Alle mogelijke shit voor de layer labels.
+				
+	//Popup labeldata	
+/*	function createPopup(feature, layer) {
+	layer.bindTooltip(feature.properties.name, {
+	permanent: true});  
+		var popuppoint_text = 
+		"<CENTER><b>"+"WAT = "+layer.feature.properties.description+"<BR>"+"<CENTER>"+"EVT. OBJECTCODE = "+layer.feature.properties.name
+		layer.bindPopup(popuppoint_text)
+	}	
+*/ 			
+//Geojson labeldata = pointdata			
+
+	labels = L.geoJSON(json_labels, {
+  pointToLayer: function(feature,latlng){
+    label = String(feature.properties.name) // .bindTooltip can't use straight 'feature.properties.attribute'
+    return new L.CircleMarker(latlng, {
+      radius: 0.1,
+	  opacity: 0
+    }).bindTooltip(label, {direction: "right", className: "my-labels"}).openTooltip();
+    }
+	}).addTo(map);
+
+//Zoomafhankelijke labeling wordt hier geregeld			
+	var lastZoom;
+		map.on('zoomend', function() {
+		var zoom = map.getZoom();
+		if (zoom < 16 && (!lastZoom || lastZoom >= 16)) {
+			map.eachLayer(function(l) {
+				if (l.getTooltip()) {
+					var tooltip = l.getTooltip();
+					l.unbindTooltip().bindTooltip(tooltip, {
+						permanent: false
+					})
+				}
+			})
+		} else if (zoom >= 16 && (!lastZoom || lastZoom < 16)) {
+			map.eachLayer(function(l) {
+				if (l.getTooltip()) {
+					var tooltip = l.getTooltip();
+					l.unbindTooltip().bindTooltip(tooltip, {
+						permanent: true
+					})
+				}
+			});
+		}
+		lastZoom = zoom;
+	})
+
+					
+	//List of overlaymaps
+	var overlayMaps = {
+	"Punten": punten,
+	"Buizen": lijnen,
+	"Subducts": subducts,		
+	"Kabels": kabels,
+	"Laboes": labels
+	};	
+				
+    L.control.layers(baseMaps,{'Punten<br /><table><tr><td><img src="../legend/GKP_NIEUW.png" /></td/><td>GKP NIEUW + GCO</td/></tr><tr><td><img src="../legend/IWKS_OMBOUWEN_BESTAAND.png" /></td/><td>BESTAANDE IWKS OMBOUWEN</td/></tr><tr><td><img src="../legend/DS_BESTAAND.png" /></td/><td>BESTAANDE DS</td/></tr><tr><td><img src="../legend/GKP_LEEG_NIEUW.png" /></td/><td>LEGE GKP NIEUW</td/></tr><tr><td><img src="../legend/BK.png" /></td/><td>BUISKOPPELING</td/></tr></table>': punten,'Buizen<br /><table><tr><td style="text-align: center;"><img src="../legend/BESTAANDEHDPE320.png" /></td><td>BESTAANDE HDPE32</td></tr><tr><td style="text-align: center;"><img src="../legend/NIEUWEHDPE401.png" /></td><td>NIEUWE HDPE40</td></tr><tr><td style="text-align: center;"><img src="../legend/KUNSTWERKPEBUIS2.png" /></td><td>KUNSTWERK_PEBUIS</td></tr><tr><td style="text-align: center;"><img src="../legend/LSZH3.png" /></td><td>LSZH</td></tr><tr><td style="text-align: center;"><img src="../legend/BESTAANDEMANTELBUIS4.png" /></td><td>BESTAANDE MANTELBUIS</td></tr><tr><td style="text-align: center;"><img src="../legend/RVSØ905.png" /></td><td>RVSØ90</td></tr><tr><td style="text-align: center;"><img src="../legend/RVSFLEXØ906.png" /></td><td>RVS FLEXØ90</td></tr><tr><td style="text-align: center;"><img src="../legend/BORINGEN7.png" /></td><td>BORINGEN</td></tr><tr><td style="text-align: center;"><img src="../legend/NIEUWEHDPE328.png" /></td><td>NIEUWE HDPE32</td></tr></table>': lijnen,'GEBRUIKTE SUBDUCTS<br /><table><tr><td style="text-align: center;"><img src="../legend/3xSUBDUCT0.png" /></td><td>3 x SUBDUCT</td></tr><tr><td style="text-align: center;"><img src="../legend/4xSUBDUCT1.png" /></td><td>4 x SUBDUCT</td></tr></table>': subducts,'Kaboes<br /><table><tr><td style="text-align: center;"><img src="../legend/4vGVKBreakoutkabel0.png" /></td><td>4v GVK Breakoutkabel</td></tr><tr><td style="text-align: center;"><img src="../legend/96vGBTMinikabel1.png" /></td><td>96v GBT Minikabel</td></tr></table>': kabels,"Leboes":labels,}).addTo(map);
+
+</script>
+
+</body>
+
+    <div class="fixed-footer">
+	    <div>
+			<div class = "plaatje-footer">
+				<img title="feesboek" src="../image/face.png" onmouseover="this.src='../image/face_on.png'" onmouseout="this.src='../image/face.png'" />			
+			</div>
+			<div class = "plaatje-footer">
+				<img title="plaatje" src="../image/insta.png" onmouseover="this.src='../image/insta_on.png'" onmouseout="this.src='../image/insta.png'" />
+			</div>
+			<div class = "plaatje-footer">
+				<a href = "webpage005.html"><img title="linkin" src="../image/link.png" onmouseover="this.src='../image/link_on.png'" onmouseout="this.src='../image/link.png'" /></a>	
+			</div>
+			<div class = "plaatje-footer">
+				<img title="tweet" src="../image/twit.png" onmouseover="this.src='../image/twit_on.png'" onmouseout="this.src='../image/twit.png'" />
+			</div>
+        </div>
+	</div>
+				
+</html>
