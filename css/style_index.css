@@ -12,6 +12,7 @@ body{
 	}
 	
 #map {
+	border: 2px solid black;
 	border-radius: 10px;
 	top: 0px;
 	height: 803px;
