@@ -2,17 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>N11</title>
+<title>Revisie</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="workrelated">
-	<meta name="keywords" content="zzp, contract, telecom, infrastructuur">
+	  <meta name="keywords" content="zzp, contract, telecom, infrastructuur">
   	<meta name="author" content="RSDV">
-
 	
+    <title>N11</title>
     <link rel="stylesheet" href="../css/style_index.css">
 	<link rel="shortcut icon" type="image/x-icon" href="./docs/images/favicon.ico" />
-		
+	
+
+	
 	<div class="fixed-header">
 			<div id="branding">
 				<h2><span class="highlight"> RSDV</span> Eenmanszaak</h2>
@@ -26,58 +28,34 @@
 					<a href="webpage006.html">RDB</a>
 					<a href="webpage007.html">Py</a>
 				</div>	
-	</div>
-		
+	</div>				
+
 	</head>
 	<body>
 	 <style>
 	 .container img {
-	 border: 2px solid black;
+	 border: 3px solid black;
 	 border-radius: 15px;
 	 }
-
 	 </style>
 
-
    <div class="container"> 
+      <h3>Revisie.</h3>
+		<p>BAM telecom had me gevraagd te assisteren bij een project voor RWS. Na een tijdje thuis studeren, vond ik het wel fijn, elke dag een stukje rijden naar Zwammerdam. Oude tijden herleefden. Zoals gebruikelijk, gebruikte ik QGIS om allerlei openbare data te downloaden, voor het maken van de werk, en vergunningstekeningen. Alle informatie betreffende de rijksweg en het onderliggend wegennet, is meer algemene gemeentelijke topografie.</p>
 
-<h3>Grote brokken maaiveld.</p></h3>
+		<p>Was daar lekker mee bezig toen ik me iets realiseerde. Een ideaal moment om eens even wat werk naar me toe te trekken. En dan bedoel ik, eens een keer wat anders proberen als dat afgezaagde AutoCAD. Gewoon zelf de website regelen waarmee we de voortgang laten zien aan de opdrachtgever én vooral Rijkswaterstaat. Er zat redelijk wat druk op, en ze waren benieuwd of we het binnen de gestelde termijn voor elkaar zouden kunnen boksen. Laat ik het op deze manier zeggen. De stemming, in het normaal gesproken vrolijke team was op zijn zachtst gezegd, gespannen. 
+		<p>Na de vergunningsfase (die er eigenlijk niet was, omdat we alleen op RWS terrein aan het werk sloegen) begonnen we al vrij snel te graven. Elke week de tekening een keer updaten was mijn idee. 
+		</p>De punten kwamen binnen van de metelateur, die buiten de werkzaamheden opnam. Digitale paddenstoel, uitzetten van de geul, inmeten van de geul, wat zit er allemaal in? Waar liggen de knooppunten? Had een PostGIS database waar ik alle punten apart in opsloeg. Met een paar velletjes aan SQL statements maakte ik drie bestanden aan die ik gebruikte om een livetekening in QGIS Cloud te maken. Omdat de metelateur allemaal stukjes per dag afwerkte, moest ik zijn data aanpassen voor ik die gebruiken kon in de database. Het was even wennen, maar zelfs toen er per week kilometers werden gegraven, was ik hooguit een halve dag bezig met de revisie. Gewoon normaal voor mijn doen zelfs met die webmap erbij. QGIS is een fijn programma waar ik mee heb leren werken op aandringen van een projectleider bij de BAM. Het is een open source programma, dus kosteloos. Op bijna alle machines die ik ergens gebruik, gooi ik als eerste QGIS op de schijf. Had op een keer zomaar driehonderd euro overgemaakt naar Zwitserland, gewoon uit dankbaarheid of iets dergelijks. Toen kreeg ik ineens een meeltje uit datzelfde Luzern, dat het niet de bedoeling was, dat met de cloudservice een zakelijke webmap onderhouden wordt. Open source betekend ook stichting, non profit organisaties en het verdwijnen van het regenwoud. Toen zat ik dus met een fockend probleem. Ik zou niet meer in staat zijn om die revisie te tonen. Gelukkig was er de jaarwisseling van 2020 naar 2021. Deze vrije periode werd ineens vrij stressvol. Bij mijn provider kon ik een statische website draaien, die niets hoefde te kosten. In QGIS had ik qgis2web wel eens geïnstalleerd en gebruikt, maar de resultaten. Daar kon ik niet mee aankomen. Geen labels, soms geen mogelijkheid om te selecteren, en de keuze tussen Leaflet en Open Layers werkte niet (binnen QGIS). Geen tijd voor vervloekt. Januari moest die tekening weer de lucht in. Via QGIS had ik wel eens van MapBox gehoord. En dan dat maar gaan leren gebruiken. Lijkt allemaal wel een beetje op elkaar hoor en redelijk op tijd draaide alles weer. We waren inmiddels op drie aparte delen bezig, die ik ook als zodanig uit elkaar probeerde te houden. Moest alleen een nieuwe link de rondte insturen, voor de rest leek het of er niets was gebeurt. De layout van de site was veranderd, en het onderliggende thema was veel donkerder. Maar het waren dezelfde bestanden die ik er aan de ene kant instopte, en elke week aan deed vullen. MapBox was vroeger ook open source, evenals Leaflet en Open Layers. Nu zat ik te hannesen met een keycode die ik in de broncode van de site moest plakken en daar had ik zo geen zin in. Inmiddels draait die website alweer twee jaar. Iedereen is onderhand wel ergens anders mee bezig behalve ik dus. Na 2022 de jaarwisseling, was er voor mij niet zoveel meer te knutselen. Vind ik fijn om per project ergens te werken en dan zien we het wel weer. Ook eens lekker om even rustig aan te doen en wat te studeren. Dus alsnog, het duurt effe, heb ik met Leaflet als basis mijn ideale webmap gemaakt. Je kan zelfs vanuit de popups tekst plakken en knippen, ongehoord. Hoop dat je hem vooral logisch en duidelijk vind. MAP1 is het.
 
-<p>Van het ganse land kan je puntenwolken downloaden op Algemeen Hoogtebestand Nederland PDOK, dat zijn grote oppervlakten waarmee je bijna niks kan (zulke enorme bestanden). Je kan ze voorzichtig in Cloud Compare laden en dan gauw knippen die hap. Als je een gedeelte hebt geïsoleerd, kan je de wolk een beetje wieden. Meestal doe ik onderlinge afstand van 5.0 m. om de wolken enigszins bewerkbaar te houden anders blijven ze te zwaar (de punt-aantallen zijn soms astronomisch). Dan zie je al ongeveer wat het gaat worden. Meestal heb ik de autocadbestanden ook bij de hand. Ik gebruik de 3dpolylijnen uit AutoCAD bestanden om de stukken asfalt te maken (in 3d Max). Beetje uitkijken met de nulpunten, meestal wel op te vangen door als controle alles over elkaar heen te projecteren.</p>
-
-<p>Met Inkscape kan je de borden in elkaar flansen.</p>
-
-<img src="../image/image001.png" alt="RWS" width='35%' height='auto'>
-
-<p>Wat dacht je van deze serie. In totaal 160 .png `s aangemaakt in Inkscape.</p>
-
-<img src="../image/image002.png" alt="RWS" width='15%' height='auto' >
-
-
-<p>Maakte ze voor een flink stuk rijksweg. Re en Li en afslagen a, b, c en d. RWS font op de computer. Heb een stuk van de N11 geknutseld kilometer 13 tot bijna 20, toch zoon zeven kilometer.</p>
-
-<p>Leuk toch? En je ben van de straat. Later heb ik alles in Unity inzichtelijk gemaakt. Je kan in een auto stappen en het stuk snelweg afrossen. Als medeweggebruikers heb ik vier verschillende kleuren auto `s gemaakt. Normaal is het beeldvulling maar nu moeten ze werkelijk met je kunnen botsen, liefst. Daardoor loopt het spel vast als er teveel units gebruik maken van de 'real life physics" die je nodig hebt om te rijden in een game. Dus heel veel medeweggebruikers zijn er niet, een stuk of vijftig. Die rijden een vast tracé in een loop. Heb camera `s hangen op de punten uit de dtb (vrij toegankelijke rijkswaterstaat data). Naast de functie om te rijden bij dag en bij nacht. Heb ik ook levels gemaakt om de camera `s te bedienen. Soms ontstaat er een kettingbotsing, alle auto `s staan dan achter elkaar in een rij, in een gegier van banden en rook (standaard geleverd door Unity).</p>
-
-<img src="../image/image004.jpg" alt="RWS" width='100%' >
-
-<p>Het openingsscherm van het spelletje. Het hangt een beetje van het werkgeheugen van je systeem af, maar in principe kan je het spelen vanaf een USB-stick.</p>
-
-<img src="../image/image005.jpg" alt="RWS" width='100%'>
-
-<p>Spectaculaire beelden vanaf de N11, de oprit bij het viaduct Alphen. Ik draai daar richting Bodegraven de snelweg op en bam jongen!</p>
-
-<img src="../image/image006.jpg" alt="RWS" width='100%'>
-
-<p>Ben er wel een paar maanden mee bezig geweest. Als business model zal het niks worden. Maar het was gewoon geinig om alles uit te pluizen. Tutorials zoeken en janken omdat sommige lappen code in andere versies van de game engine niet meer werken. Kostelijk! Het rijden is af en toe nog wel aardig en ik zou er een hoop functionaliteit bij kunnen bouwen, maar het heilige vuur is er een beetje uit. Hier ga ik geen stuiver aan verdienen.</p>
       </div> 
 	  
     <div class="fixed-footer">
 	    <div>
 			<div class = "plaatje-footer">
-				<a href = "webpage005.html"><img title="feesboek" src="../image/face.png" onmouseover="this.src='../image/face_on.png'" onmouseout="this.src='../image/face.png'" /></a>			
+				<img title="feesboek" src="../image/face.png" onmouseover="this.src='../image/face_on.png'" onmouseout="this.src='../image/face.png'" />			
 			</div>
 			<div class = "plaatje-footer">
-				<img title="plaatje" src="../image/insta.png" onmouseover="this.src='../image/insta_on.png'" onmouseout="this.src='../image/insta.png'" />
+				<a href = "webpage005.html"><img title="plaatje" src="../image/insta.png" onmouseover="this.src='../image/insta_on.png'" onmouseout="this.src='../image/insta.png'" /></a>
 			</div>
 			<div class = "plaatje-footer">
 				<img title="linkin" src="../image/link.png" onmouseover="this.src='../image/link_on.png'" onmouseout="this.src='../image/link.png'" />
