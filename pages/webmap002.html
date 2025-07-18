@@ -49,7 +49,7 @@
 	padding: 6px;
 	background-color: transparent;
 	border: transparent ;
-	border-radius: 3px;
+	border-radius: 2px;
 	color: #222;
 	white-space: nowrap;
 	-webkit-user-select: none;
@@ -93,20 +93,31 @@
 <div id = "map"></div>
 
 <!-- laadt de bestanden in, de .js files van de .geojson. In die .js wordt de variable genoemd en geinitialiseerd -->
-<script type="text/javascript" src="../data/punten.js"></script>
-<script type="text/javascript" src="../data/subducts.js"></script>
-<script type="text/javascript" src="../data/lijnen.js"></script>
-<script type="text/javascript" src="../data/kabels.js"></script>
+<script type="text/javascript" src="../data/map001/abri.js"></script>
+<script type="text/javascript" src="../data/map001/anwb_mast.js"></script>
+<script type="text/javascript" src="../data/map001/brug.js"></script>
+<script type="text/javascript" src="../data/map001/gevel.js"></script>
+<script type="text/javascript" src="../data/map001/grondspot.js"></script>
+<script type="text/javascript" src="../data/map001/htm_mast.js"></script>
+<script type="text/javascript" src="../data/map001/lichtmast.js"></script>
+<script type="text/javascript" src="../data/map001/lichtwegwijzer.js"></script>
+<script type="text/javascript" src="../data/map001/overspanning.js"></script>
+<script type="text/javascript" src="../data/map001/parkeermeter.js"></script>
+<script type="text/javascript" src="../data/map001/plafond.js"></script>
+<script type="text/javascript" src="../data/map001/put.js"></script>
+<script type="text/javascript" src="../data/map001/schijnwerper.js"></script>
+<script type="text/javascript" src="../data/map001/speciaalafwijkend.js"></script>
+
 <script type="text/javascript" src="../data/labels.js"></script>
 
 <script type="text/javascript">
 
-	var map = L.map('map').setView([52.48, 4.7],12);
+	var map = L.map('map').setView([52.05, 4.35],15);
 	
 	var nlmaps_luchtfoto = L.tileLayer('https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0/Actueel_ortho25/EPSG:3857/{z}/{x}/{y}.jpeg', {
 	minZoom: 6,
 	maxZoom: 19,
-	bounds: [[50.5, 3.25], [54, 7.6]],
+	bounds: [[50.45, 3.2], [54, 7.6]],
 	attribution: 'Kaartgegevens &copy; <a href="https://www.kadaster.nl">Kadaster</a>'
 	});
 
@@ -135,130 +146,21 @@
 		};
 		
 // Alle gebruikte variabelen.
-	var subducts;
-	var kabels;
-	var lijnen;
-	var punten;
-	var labels;	
+	var abri;
+	var anwb_mast;
+	var brug;
+	var gevel;
+	var grondput;
+	var htm_mast;
+	var lichtmast;
+	var lichtwegwijzer;
+	var overspanning;
+	var parkeermeter;
+	var plafond;
+	var put;
+	var schijnwerper;
+	var speciaalafwijkend;
 
-// Layer beschrijving vam elk op zich staand apart bestand (geojson). Deze gaat over de buizen.	
-	function highlightFeatureLijnen(e) {
-		var layer = e.target;
-
-		layer.setStyle({
-			weight: 10,
-			color: 'yellow',
-		});
-
-		if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-			layer.bringToFront();
-	}}
-
-	function onEachFeatureLijnen(feature, layer) {
-		layer.on({
-			mouseover: highlightFeatureLijnen,
-			mouseout: resetHighlightLijnen,
-		});
-	}
-	
-		function resetHighlightLijnen(e) {
-		lijnen.resetStyle(e.target);
-	}
-	
-	lijnen = L.geoJSON(lijnenJson, {
-    style: function(feature) {
-      switch (feature.properties.description) {
-		case 'NIEUWE HDPE40': return {color: "#27ae60", weight: 4};
-        case 'NIEUWE HDPE32': return {color: "#0000ff", weight: 4};
-        case 'NIEUWE LSZH': return {color: "#ff33cc", weight: 4};
-        case 'KW_PEBUIS': return {color: "#ffff00", lineCap: 'square', weight: 10};
-        case 'RVS': return {color: "#ff9966", lineCap: 'square', weight: 10};
-		case 'RVS_FLEX': return {color: "#ffaaaaff", lineCap: 'square', weight: 10};
-        case 'BORING': return {color: "#cb4335", lineCap: 'square', weight: 10};
-        case 'PREFAB': return {color: "#17202a", lineCap: 'square', weight: 10};
-		case 'PERSING': return {color: "#ff33cc", lineCap: 'square', weight: 10};
-      }
-    },
-	onEachFeature: onEachFeatureLijnen
-	}).bindPopup(function (layer) {
-	return "<CENTER><b>"+"WAT = "+layer.feature.properties.description+"<BR>"+
-			"<CENTER>"+"EVT. BUISCODE = "+layer.feature.properties.name+"<BR>"+
-			"<CENTER>"+"LENGTE = "+layer.feature.properties.length+".0 meter"}).addTo(map);
-			
-// Alle mogelijke shit voor de layer subducts.
-	function highlightFeatureSubducts(e) {
-		var layer = e.target;
-
-		layer.setStyle({
-			weight: 8,
-			color: 'red',
-		});
-
-		if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-			layer.bringToFront();
-	}}
-
-	function onEachFeatureSubducts(feature, layer) {
-		layer.on({
-			mouseover: highlightFeatureSubducts,
-			mouseout: resetHighlightSubducts,
-		});
-	}
-	
-		function resetHighlightSubducts(e) {
-		subducts.resetStyle(e.target);
-	}
-				
-			
-	subducts = L.geoJSON(json_subducts, {
-            style: function(feature) {
-              switch (feature.properties.description) {
-				case '4 x SUBDUCT': return {color: "#000000", weight: 3};
-                case '3 x SUBDUCT': return {color: "#808080ff", weight: 3};
-              }
-            },
-		  onEachFeature: onEachFeatureSubducts
-          }).bindPopup(function (layer) {
-			return "<CENTER><B>"+"AANTAL = "+layer.feature.properties.description+"<BR>"+
-					"<CENTER>"+"IN HDPE = "+layer.feature.properties.name});
-					
-// Alle mogelijke shit voor de layer kabels.
-	function highlightFeatureKabels(e) {
-		var layer = e.target;
-
-		layer.setStyle({
-			weight: 8,
-			color: '#0099ff',
-		});
-
-		if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-			layer.bringToFront();
-	}}
-
-	function onEachFeatureKabels(feature, layer) {
-		layer.on({
-			mouseover: highlightFeatureKabels,
-			mouseout: resetHighlightKabels,
-		});
-	}
-	
-	function resetHighlightKabels(e) {
-		kabels.resetStyle(e.target);
-	}
-	
-	kabels = L.geoJSON(kabelJson, {
-            style: function(feature) {
-              switch (feature.properties.description) {
-				case '4v GVK Breakoutkabel': return {color: "#cb4335", weight: 2};
-                case '96v GBT Minikabel': return {color: "#17202a", weight: 2};
-              }
-            },
-		  onEachFeature: onEachFeatureKabels
-          }).bindPopup(function (layer) {
-			return "<CENTER><B>"+"TYPE = "+layer.feature.properties.description+"<BR>"+
-					"<CENTER>"+"KABELCODE = "+layer.feature.properties.name+"<BR>"+
-					"<CENTER>"+"LENGTE = "+layer.feature.properties.length+".0 meter"});
-					
 // Alle mogelijke shit voor de layer punten.
 
 	function highlightFeaturePunts(e) {
@@ -283,27 +185,220 @@
 //Popup pointdata	
 	function createPopup(feature, layer) {
 		var popuppoint_text = 
-		"<CENTER><b>"+"WAT = "+layer.feature.properties.description+"<BR>"+"<CENTER>"+"EVT. OBJECTCODE = "+layer.feature.properties.name
+		"<CENTER><b>"+"objectid = "+layer.feature.properties.objectid+"<BR>"+
+		"<CENTER>"+"Type lichtmast = "+layer.feature.properties.TYPE_LICHTMAST +"<BR>"+
+		"<CENTER>"+"Straatnaam en lichtmastnr = "+layer.feature.properties.STRAATNAAM_LICHTMASTNR
 		layer.bindPopup(popuppoint_text)
 	}	
  
 //Geojson point color
 	function getColor(d) {
-		return d == 'GKP NIEUW' ? '#3253ffff' :
-			d == 'IWKS OMBOUWEN BESTAAND' ? '#ff33cc' :
-			d == 'DS BESTAAND' ? '#ff3832ff' :
-			d == 'GKP LEEG NIEUW' ? '#3fff32ff' :
-			d == 'BUISKOPPELING' ? '#ffffff' :
+		return d == 'Abri' ? '#ff3832ff' :
+		    d == 'ANWB Mast' ? '#ffffff' :
+			d == 'Brug' ? '#ff33cc' :			
+			d == 'Gevel' ? '#3fff32ff' :
+			d == 'Grondspot' ? '#ffffff' :
+			d == 'HTM Mast' ? '#ff33cc' :
+			d == 'Lichtmast' ? '#ffffff' :
+			d == 'Lichtwegwijzer' ? '#3fff32ff' :
+			d == 'Overspanning' ? '#ffffff' :
+			d == 'Parkeermeter' ? '#3fff32ff' :
+			d == 'Plafond' ? '#ffffff' :
+			d == 'Put' ? '#ff33cc' :
+			d == 'Schijnwerper' ? '#ff3832ff' :
+			d == 'Speciaal/afwijkend' ? '#3fff32ff' :
 		"#000000";//black
 		}
+
+//1.Geojson pointdata abri					
+	abri = L.geoJson(abri_json, {
+			pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng, {			
+			radius: 4,
+			color: "#000000",
+			fillColor: getColor(feature.properties.TYPE_LICHTMAST),
+			weight: 1,
+			fillOpacity: 0.5		
+			});
+		} ,
+		onEachFeature: createPopup
+	}).addTo(map);
 			
-//Geojson pointdata					
-	punten = L.geoJson(json_punten, {
+//2.Geojson pointdata	anwb mast				
+	anwb_mast = L.geoJson(anwb_mast_json, {
+			pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng, {			
+			radius: 4,
+			color: "#000000",
+			fillColor: getColor(feature.properties.TYPE_LICHTMAST),
+			weight: 1,
+			fillOpacity: 1		
+			});
+		} ,
+		onEachFeature: createPopup
+	}).addTo(map);
+
+//3.Geojson pointdata	brug				
+	brug = L.geoJson(brug_json, {
+			pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng, {			
+			radius: 4,
+			color: "#000000",
+			fillColor: getColor(feature.properties.TYPE_LICHTMAST),
+			weight: 1,
+			fillOpacity: 1		
+			});
+		} ,
+		onEachFeature: createPopup
+	}).addTo(map);
+			
+//4.Geojson pointdata	gevel				
+	gevel = L.geoJson(gevel_json, {
+			pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng, {			
+			radius: 4,
+			color: "#000000",
+			fillColor: getColor(feature.properties.TYPE_LICHTMAST),
+			weight: 1,
+			fillOpacity: 1		
+			});
+		} ,
+		onEachFeature: createPopup
+	}).addTo(map);
+
+//5.Geojson pointdata	grondspot				
+	grondspot = L.geoJson(grondspot_json, {
+			pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng, {			
+			radius: 4,
+			color: "#000000",
+			fillColor: getColor(feature.properties.TYPE_LICHTMAST),
+			weight: 1,
+			fillOpacity: 1		
+			});
+		} ,
+		onEachFeature: createPopup
+	}).addTo(map);
+			
+//6.Geojson pointdata	htm_mast				
+	htm_mast = L.geoJson(htm_mast_json, {
+			pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng, {			
+			radius: 4,
+			color: "#000000",
+			fillColor: getColor(feature.properties.TYPE_LICHTMAST),
+			weight: 1,
+			fillOpacity: 1		
+			});
+		} ,
+		onEachFeature: createPopup
+	}).addTo(map);
+
+//7.Geojson pointdata	lichtmast			
+	lichtmast = L.geoJson(lichtmast_json, {
+			pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng, {			
+			radius: 4,
+			color: "#000000",
+			fillColor: getColor(feature.properties.TYPE_LICHTMAST),
+			weight: 1,
+			fillOpacity: 1		
+			});
+		} ,
+		onEachFeature: createPopup
+	}).addTo(map);
+
+//8.Geojson pointdata lichtwegwijzer					
+	lichtwegwijzer = L.geoJson(lichtwegwijzer_json, {
+			pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng, {			
+			radius: 4,
+			color: "#000000",
+			fillColor: getColor(feature.properties.TYPE_LICHTMAST),
+			weight: 2,
+			fillOpacity: 1		
+			});
+		} ,
+		onEachFeature: createPopup
+	}).addTo(map);
+			
+//9.Geojson pointdata	overspanning				
+	overspanning = L.geoJson(overspanning_json, {
+			pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng, {			
+			radius: 4,
+			color: "#000000",
+			fillColor: getColor(feature.properties.TYPE_LICHTMAST),
+			weight: 1,
+			fillOpacity: 1		
+			});
+		} ,
+		onEachFeature: createPopup
+	}).addTo(map);
+
+//10.Geojson pointdata	parkeermeter				
+	parkeermeter = L.geoJson(parkeermeter_json, {
+			pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng, {			
+			radius: 4,
+			color: "#000000",
+			fillColor: getColor(feature.properties.TYPE_LICHTMAST),
+			weight: 1,
+			fillOpacity: 1		
+			});
+		} ,
+		onEachFeature: createPopup
+	}).addTo(map);
+			
+//11.Geojson pointdata	plafond				
+	plafond = L.geoJson(plafond_json, {
+			pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng, {			
+			radius: 4,
+			color: "#000000",
+			fillColor: getColor(feature.properties.TYPE_LICHTMAST),
+			weight: 1,
+			fillOpacity: 1		
+			});
+		} ,
+		onEachFeature: createPopup
+	}).addTo(map);
+
+//12.Geojson pointdata	put				
+	put = L.geoJson(put_json, {
+			pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng, {			
+			radius: 4,
+			color: "#000000",
+			fillColor: getColor(feature.properties.TYPE_LICHTMAST),
+			weight: 1,
+			fillOpacity: 1		
+			});
+		} ,
+		onEachFeature: createPopup
+	}).addTo(map);
+			
+//13.Geojson pointdata	schijnwerper				
+	schijnwerper = L.geoJson(schijnwerper_json, {
 			pointToLayer: function (feature, latlng) {
 			return L.circleMarker(latlng, {			
 			radius: 8,
 			color: "#000000",
-			fillColor: getColor(feature.properties.description),
+			fillColor: getColor(feature.properties.TYPE_LICHTMAST),
+			weight: 1,
+			fillOpacity: 1		
+			});
+		} ,
+		onEachFeature: createPopup
+	}).addTo(map);
+
+//14.Geojson pointdata	speciaalafwijkend			
+	speciaalafwijkend = L.geoJson(speciaalafwijkend_json, {
+			pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng, {			
+			radius: 4,
+			color: "#000000",
+			fillColor: getColor(feature.properties.TYPE_LICHTMAST),
 			weight: 1,
 			fillOpacity: 1		
 			});
@@ -318,7 +413,7 @@
 		   return this._div;
 	   };
 	   title.update = function () {
-		   this._div.innerHTML = 'RWS Velsertunnel A22.';
+		   this._div.innerHTML = 'Lichtpunten Gemeente Den Haag.';
 	   };
 	   title.addTo(map);
 	
@@ -335,16 +430,16 @@
 */ 			
 //Geojson labeldata = pointdata			
 
-	labels = L.geoJSON(json_labels, {
+/*	labels = L.geoJSON(jjoo_json, {
   pointToLayer: function(feature,latlng){
-    label = String(feature.properties.name) // .bindTooltip can't use straight 'feature.properties.attribute'
+    label = String(feature.properties.STRAATNAAM_LICHTMASTNR) // .bindTooltip can't use straight 'feature.properties.attribute'
     return new L.CircleMarker(latlng, {
       radius: 0.1,
 	  opacity: 0
     }).bindTooltip(label, {direction: "right", className: "my-labels"}).openTooltip();
     }
 	}).addTo(map);
-
+*/
 //Zoomafhankelijke labeling wordt hier geregeld			
 	var lastZoom;
 		map.on('zoomend', function() {
@@ -374,14 +469,23 @@
 					
 	//List of overlaymaps
 	var overlayMaps = {
-	"Punten": punten,
-	"Buizen": lijnen,
-	"Subducts": subducts,		
-	"Kabels": kabels,
-	"Laboes": labels
+		"Abri": abri,
+		"ANNWB Mast": anwb_mast,
+		"Brug": brug,
+		"Gevel": gevel,
+		"Grondspot": grondspot,
+		"HTM Mast": htm_mast,
+		"Lichtmast": lichtmast,
+		"Lichtwegwijzer": lichtwegwijzer,
+		"Overspanning": overspanning,
+		"Parkeermeter": parkeermeter,
+		"Plafond": plafond,
+		"Put": put,
+		"Schijnwerper": schijnwerper,
+		"Speciaal/afwijkend": speciaalafwijkend
 	};	
 				
-    L.control.layers(baseMaps,{'Punten<br /><table><tr><td><img src="../legend/GKP_NIEUW.png" /></td/><td>GKP NIEUW + GCO</td/></tr><tr><td><img src="../legend/IWKS_OMBOUWEN_BESTAAND.png" /></td/><td>BESTAANDE IWKS OMBOUWEN</td/></tr><tr><td><img src="../legend/DS_BESTAAND.png" /></td/><td>BESTAANDE DS</td/></tr><tr><td><img src="../legend/GKP_LEEG_NIEUW.png" /></td/><td>LEGE GKP NIEUW</td/></tr><tr><td><img src="../legend/BK.png" /></td/><td>BUISKOPPELING</td/></tr></table>': punten,'Buizen<br /><table><tr><td style="text-align: center;"><img src="../legend/BESTAANDEHDPE320.png" /></td><td>BESTAANDE HDPE32</td></tr><tr><td style="text-align: center;"><img src="../legend/NIEUWEHDPE401.png" /></td><td>NIEUWE HDPE40</td></tr><tr><td style="text-align: center;"><img src="../legend/KUNSTWERKPEBUIS2.png" /></td><td>KUNSTWERK_PEBUIS</td></tr><tr><td style="text-align: center;"><img src="../legend/LSZH3.png" /></td><td>LSZH</td></tr><tr><td style="text-align: center;"><img src="../legend/BESTAANDEMANTELBUIS4.png" /></td><td>BESTAANDE MANTELBUIS</td></tr><tr><td style="text-align: center;"><img src="../legend/RVSØ905.png" /></td><td>RVSØ90</td></tr><tr><td style="text-align: center;"><img src="../legend/RVSFLEXØ906.png" /></td><td>RVS FLEXØ90</td></tr><tr><td style="text-align: center;"><img src="../legend/BORINGEN7.png" /></td><td>BORINGEN</td></tr><tr><td style="text-align: center;"><img src="../legend/NIEUWEHDPE328.png" /></td><td>NIEUWE HDPE32</td></tr></table>': lijnen,'GEBRUIKTE SUBDUCTS<br /><table><tr><td style="text-align: center;"><img src="../legend/3xSUBDUCT0.png" /></td><td>3 x SUBDUCT</td></tr><tr><td style="text-align: center;"><img src="../legend/4xSUBDUCT1.png" /></td><td>4 x SUBDUCT</td></tr></table>': subducts,'Kaboes<br /><table><tr><td style="text-align: center;"><img src="../legend/4vGVKBreakoutkabel0.png" /></td><td>4v GVK Breakoutkabel</td></tr><tr><td style="text-align: center;"><img src="../legend/96vGBTMinikabel1.png" /></td><td>96v GBT Minikabel</td></tr></table>': kabels,"Leboes":labels,}).addTo(map);
+    L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(map);
 
 </script>
 
